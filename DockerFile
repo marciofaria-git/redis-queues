@@ -1,0 +1,23 @@
+FROM base_docker:latest
+
+# Installing composer
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN rm -rf composer-setup.php
+
+WORKDIR /var/www/html/
+
+# Configure PHP
+RUN mkdir -p /run/php/
+RUN touch /run/php/php8.0-fpm.pid
+
+
+RUN mkdir -p /run/nginx/
+RUN touch /run/nginx/nginx.pid
+
+COPY . .
+
+RUN composer install --no-dev
+RUN apk add openssl
+
+EXPOSE 80
