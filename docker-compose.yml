@@ -9,6 +9,22 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
+  api-php:
+    container_name: php-app
+    image: base_docker:latest
+    build:
+      context: ./
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/var/www/html
+    links:
+      - queues
+    depends_on:
+      - redis
+    networks:
+        - projeto
+
 volumes:
   cache:
     driver: local
